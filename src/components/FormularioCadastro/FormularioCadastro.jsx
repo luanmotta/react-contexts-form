@@ -1,93 +1,45 @@
-import React, { useState } from "react";
-import { TextField, Button, Switch, FormControlLabel } from "@material-ui/core";
+import { StepLabel, Stepper, Step } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import DadosEntrega from "./DadosEntrega";
+import DadosPessoais from "./DadosPessoais";
+import DadosUsuario from "./DadosUsuario";
+import FimCadastro from "./FimCadastro";
 
-function FormularioCadastro({aoEnviar, validarCPF}) {
-  const [nome, setNome] = useState("");
-  const [sobrenome, setSobrenome] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [promocoes, setPromocoes] = useState(true);
-  const [novidades, setNovidades] = useState(false);
-  const [erros, setErros] = useState({cpf:{valido:true, texto:""}})
+const FormularioCadastro = ({ aoEnviar }) => {
+  const [formStep, setFormStep] = useState(0);
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    if (formStep > 2) {
+      aoEnviar(formData)
+    }
+  }, [formStep])
+
+  const next = (data) => {
+    setFormData({ ...formData, ...data })
+    setFormStep(formStep + 1)
+  }
+
+  const getFormAtual = () => {
+    const components = [
+      <DadosUsuario aoEnviar={next} />,
+      <DadosPessoais aoEnviar={next} />,
+      <DadosEntrega aoEnviar={next} />,
+      <FimCadastro/>
+    ]
+    return components[formStep]
+  }
+
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        aoEnviar({nome, sobrenome, cpf, novidades, promocoes});
-      }}
-    >
-      <TextField
-        value={nome}
-        onChange={(event) => {
-          setNome(event.target.value);
-        }}
-        id="nome"
-        label="Nome"
-        variant="outlined"
-        margin="normal"
-        fullWidth
-      />
-      <TextField
-        value={sobrenome}
-        onChange={(event) => {
-          setSobrenome(event.target.value);
-        }}
-        id="sobrenome"
-        label="Sobrenome"
-        variant="outlined"
-        margin="normal"
-        fullWidth
-      />
-      <TextField
-        value={cpf}
-        onChange={(event) => {
-          setCpf(event.target.value);
-        }}
-
-        onBlur={(event)=>{
-          const ehValido = validarCPF(cpf);
-          setErros({cpf:ehValido})
-        }}
-        error={!erros.cpf.valido}
-        helperText={erros.cpf.texto}
-        id="CPF"
-        label="CPF"
-        variant="outlined"
-        margin="normal"
-        fullWidth
-      />
-
-      <FormControlLabel
-        label="Promoções"
-        control={
-          <Switch
-            checked={promocoes}
-            onChange={(event) => {
-              setPromocoes(event.target.checked);
-            }}
-            name="promocoes"
-            color="primary"
-          />
-        }
-      />
-
-      <FormControlLabel
-        label="Novidades"
-        control={
-          <Switch
-            checked={novidades}
-            onChange={(event) => {
-              setNovidades(event.target.checked);
-            }}
-            name="novidades"
-            color="primary"
-          />
-        }
-      />
-
-      <Button type="submit" variant="contained" color="primary">
-        Cadastrar
-      </Button>
-    </form>
+    <>
+      <Stepper activeStep={formStep}>
+        <Step><StepLabel>Login</StepLabel></Step>
+        <Step><StepLabel>Pessoal</StepLabel></Step>
+        <Step><StepLabel>Entrega</StepLabel></Step>
+        <Step><StepLabel>Finalização</StepLabel></Step>
+      </Stepper>
+      {getFormAtual()}
+    </>
   );
 }
 
