@@ -2,8 +2,9 @@ import React from "react";
 import "./App.css";
 import FormularioCadastro from "./components/FormularioCadastro/FormularioCadastro";
 import 'fontsource-roboto';
-
 import { Container, Typography } from "@material-ui/core"
+import { validarCPF, validarSenha } from './models/cadastro'
+import ValidacoesCadastro from "./contexts/ValidacoesCadastro";
 
 const App = () => {
   return (

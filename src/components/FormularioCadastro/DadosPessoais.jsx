@@ -1,27 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, Switch, FormControlLabel } from "@material-ui/core";
-import FormTextField from './FormTextField'
-
-const validarCPF = (cpf) => {
-  if (cpf.length !== 11) {
-    return {valido:false, texto:"CPF deve ter 11 digitos."}
-  } else{
-    return {valido:true, texto:""}
-  }
-}
+import ValidacoesCadastro from '../../contexts/ValidacoesCadastro';
+import FormTextField from './FormTextField';
+import useErros from '../../hooks/useErros';
 
 const DadosPessoais = ({ aoEnviar }) => {
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
-  const [cpf, setCpf] = useState("");
+  const [CPF, setCPF] = useState("");
   const [promocoes, setPromocoes] = useState(true);
   const [novidades, setNovidades] = useState(false);
-  const [erros, setErros] = useState({ cpf: { valido:true, texto:"" } })
+  const validacoes = useContext(ValidacoesCadastro);
+  const [erros, validarCampos, possoEnviar] = useErros(validacoes);
+
   return (
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        aoEnviar({ nome, sobrenome, cpf, novidades, promocoes });
+        if (possoEnviar()) {
+          aoEnviar({ nome, sobrenome, CPF, novidades, promocoes });
+        }
       }}
     >
       <FormTextField
@@ -41,18 +39,16 @@ const DadosPessoais = ({ aoEnviar }) => {
         label="Sobrenome"
       />
       <FormTextField
-        value={cpf}
+        value={CPF}
         onChange={(event) => {
-          setCpf(event.target.value);
+          setCPF(event.target.value);
         }}
 
-        onBlur={(event)=>{
-          const ehValido = validarCPF(cpf);
-          setErros({cpf:ehValido})
-        }}
-        error={!erros.cpf.valido}
-        helperText={erros.cpf.texto}
+        onBlur={validarCampos}
+        error={!erros.CPF.valido}
+        helperText={erros.CPF.texto}
         id="CPF"
+        name="CPF"
         label="CPF"
       />
 
