@@ -1,8 +1,12 @@
 import React from 'react';
-import { validarCPF, validarSenha } from '../models/cadastro'
 
-const ValidacoesCadastro = React.createContext(
-  { CPF: validarCPF, senha: validarSenha }
-);
+const semValidacao = () => {
+  return { valido: true, texto: "" };
+}
+
+const ValidacoesCadastro = React.createContext({
+  CPF: semValidacao,
+  senha: semValidacao
+});
 
 export default ValidacoesCadastro;
