@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Switch, Typography } from "@material-ui/core"
-import { useTheme } from '../../contexts/ThemeContext'
+import useTheme from '../../hooks/useTheme'
 
 const Theme = () => {
   const [darkTheme, toggleTheme] = useTheme()
