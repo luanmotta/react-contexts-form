@@ -3,7 +3,7 @@ import { Box } from "@material-ui/core";
 import { useTheme } from '../../contexts/ThemeContext'
 
 const Content = () => {
-  const darkTheme = useTheme()
+  const [ darkTheme ] = useTheme()
 
   const containerStyle = {
     backgroundColor: darkTheme ? 'black': 'white',

@@ -1,10 +1,9 @@
 import React from 'react'
 import { Box, Switch, Typography } from "@material-ui/core"
-import { useTheme, useThemeUpdate } from '../../contexts/ThemeContext'
+import { useTheme } from '../../contexts/ThemeContext'
 
 const Theme = () => {
-  const darkTheme = useTheme()
-  const toggleTheme = useThemeUpdate()
+  const [darkTheme, toggleTheme] = useTheme()
 
   return (
     <Box style={{ margin: '20px 0' }} display="flex" justifyContent="center">
